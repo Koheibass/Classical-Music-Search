@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Classic Composer Search</title>
+</head>
+
+<body>
+    <h1>Classic Composer Search</h1>
+    ​
+    <!-- 検索フォーム -->
+    <form onsubmit="handleFormSubmit(event)">
+        <input name="query" />
+        <button>Search</button>
+    </form>
+    ​
+    <!-- 検索結果 -->
+    <div id="search_result"></div>
+    ​
+    <!-- スクリプト -->
+    <script>
+        /**
+         * フォーム送信時の処理
+         */
+        function handleFormSubmit(event) {
+            event.preventDefault(); // デフォルトで動いちゃうフォームの送信をさせなくする
+            const formData = new FormData(event.target);
+            const query = formData.get("query"); // input name="query" の値を取り出す
+            search(query);
+        }
+
+        /**
+         * 検索処理
+         */
+        async function search(query) {
+            // openopus api で検索する
+            // https://github.com/openopus-org/openopus_api/blob/master/USAGE.md#list-popular-composers
+
+            // api 呼んで
+            const response = await fetch(
+                "https://api.openopus.org/composer/list/pop.json"
+            );
+
+            // 中身をJSONとして取り出して、作曲家リストにする
+            const apiResult = await response.json();
+            const composers = apiResult.composers;
+
+            // 結果のリストから query にマッチするのだけを残す
+            // TODO: 航平さんご自身で書いてください！
+
+            const apiresult = items.filter(function (composers) {
+
+                return composers === query;
+
+            })
+
+
+
+            // 検索結果の div に HTML として入れ込む
+            const searchResultDiv = document.getElementById("search_result");
+            searchResultDiv.innerHTML = composers
+                .map(
+                    (composer) =>
+                        `<div>
+                <div>${composer.name}</div>
+                <div>${composer.complete_name}</div>
+                <div>${composer.birth} - ${composer.death}</div>
+                <div>${composer.epoch}</div>
+                <div><img src="${composer.portrait}"></div>
+              </div>`
+                )
+                .join("");
+        }
+    </script>
+</body>
+
+</html>
