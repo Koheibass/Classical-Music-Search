@@ -50,17 +50,15 @@
             // 結果のリストから query にマッチするのだけを残す
             // TODO: 航平さんご自身で書いてください！
 
-            const apiresult = items.filter(function (composers) {
-
-                return composers === query;
-
-            })
-
+            const matchcomposers = composers.filter(composer => {
+                return composer.name.includes(query) ||
+                    composer.complete_name.includes(query);
+            });
 
 
             // 検索結果の div に HTML として入れ込む
             const searchResultDiv = document.getElementById("search_result");
-            searchResultDiv.innerHTML = composers
+            searchResultDiv.innerHTML = matchcomposers
                 .map(
                     (composer) =>
                         `<div>
